@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+  <!-- Links -->
+  <ul class="navbar-nav">
+      <a class="navbar-brand" href="#">
+        <img src="https://www.larvol.com/wp-content/uploads/2019/02/larvel-logo-white-ratina.png" alt="Logo" style="width:40px;">
+    </a>
+    <li class="nav-item">
+      <a class="nav-link"  href="{% url 'dashboard:homepage' %}">Dashboard</a>
+    </li>
+      <li class="nav-item">
+      <a class="nav-link" href="#">Schedule Scripts</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'dashboard:logout' %}">Logout</a>
+    </li>
+  </ul>
+
+</nav>
+<br/>
+
+<div class="container-fluid">
+  <h2>Recent Indexed Data</h2>
+  <!--<p></p>-->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Conference</th>
+        <th>Status</th>
+          <th>Start time</th>
+        <th>End time </th>
+          <th>Crawl id</th>
+          <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for data in recent_data %}
+      <tr>
+        <td></td>
+        <td>{{data.conf}}</td>
+        <td>{{data.status}}</td>
+           <td>{{data.start_datetime}}</td>
+        <td>{{data.end_datetime}}</td>
+        <td>{{data.crawl_id}}</td>
+          <td> <a href="{% url 'dashboard:view_data' data.crawl_id %}" class="btn btn-info">View Data</a> </td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
