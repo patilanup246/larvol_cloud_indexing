@@ -31,36 +31,36 @@
 <br/>
 
 <div class="container-fluid">
-  <h2>Recent Indexed Data</h2>
-  <!--<p></p>-->
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Conference</th>
-        <th>Status</th>
-          <th>Start time</th>
-        <th>End time </th>
-          <th>Crawl id</th>
-          <th></th>
-      </tr>
-    </thead>
-    <tbody>
 
-    {% for data in recent_data %}
-      <tr>
-        <td></td>
-        <td>{{data.conf}}</td>
-        <td>{{data.status}}</td>
-           <td>{{data.start_datetime}}</td>
-        <td>{{data.end_datetime}}</td>
-        <td>{{data.crawl_id}}</td>
-          <td> <a href="{% url 'dashboard:view_data' data.crawl_id %}" class="btn btn-info">View Data</a> </td>
-      </tr>
-    {% endfor %}
 
-    </tbody>
-  </table>
+    <div class="row">
+            <div class="col-md-6">
+                <h2>Schedule Spiders</h2>
+
+
+                <form action="{% url 'dashboard:schedule_start' %}" method="post">
+                    {% csrf_token %}
+                    <h2>Select Conference to Index</h2>
+                    <select class="form-control" name="conf_name">
+                        <option>-- Select --</option>
+                        {% for spi in spider_name %}
+                             <option value="{{spi}}">{{spi}}</option>
+                        {% endfor %}
+                        <option value="esmo">esmo</option>
+                    </select>
+                    <br/>
+
+                    <input type="submit" class="btn btn-info" value="Schedule"/>
+                </form>
+
+            </div>
+        <div class="col-md-6">
+
+
+            </div>
+
+
+    </div>
 </div>
 
 </body>

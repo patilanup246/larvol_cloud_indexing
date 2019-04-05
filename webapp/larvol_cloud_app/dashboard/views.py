@@ -14,6 +14,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, RedirectView
 from django.contrib.auth.decorators import login_required, permission_required
+from scrapyd_api import ScrapydAPI
+scrapyd = ScrapydAPI('http://127.0.0.1:6800')
 
 client = MongoClient()
 db = client.LARVOL_CLOUD
@@ -120,6 +122,25 @@ class view_dataView(TemplateView):
         context['data_id'] = data_id
         return context
 
+
+class scheduleView(TemplateView):
+    template_name = "schedule.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(self.__class__, self).dispatch(request, *args, **kwargs)
+
+
+    def getSpiders(self):
+        return scrapyd.list_spiders('larvol_indexing')
+
+
+    def get_context_data(self, **kwargs):
+        context = super(self.__class__, self).get_context_data(**kwargs)
+        context['spider_name'] = self.getSpiders()
+        return context
+
+
 class LogoutView(RedirectView):
     url = '/'
     def get(self, request, *args, **kwargs):
@@ -130,9 +151,24 @@ login = loginView.as_view()
 homepage = homepageView.as_view()
 view_data = view_dataView.as_view()
 logout = LogoutView.as_view()
+schedule = scheduleView.as_view()
 
 
 # EXPORT DATA
+
+def schedule_start(request):
+    if request.method == 'POST':
+        value = request.POST['conf_name']
+        try:
+            scrapyd.schedule('larvol_indexing', value)
+        except:
+            pass
+        return HttpResponseRedirect('/homepage/')
+
+    else:
+        return HttpResponseRedirect('/schedule/')
+
+
 
 def getData(crawl_id):
     return crawl_initiate.find_one({'crawl_id':crawl_id})
